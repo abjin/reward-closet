@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String    @id @default(cuid())
+  email       String    @unique
+  nickname    String
+  supabaseId  String    @unique
+  points      Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  donations   Donation[]
+  
+  @@map("users")
+}
+
+model Donation {
+  id              String        @id @default(cuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  imageUrl        String        @db.Text
+  brand           String?
+  itemType        String
+  condition       Condition
+  estimatedPoints Int
+  actualPoints    Int?
+  
+  pickupMethod    PickupMethod
+  address         String?       @db.Text
+  status          DonationStatus @default(PENDING)
+  
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  
+  @@map("donations")
+}
+
+enum Condition {
+  EXCELLENT   // 새상품
+  GOOD        // 양호
+  FAIR        // 사용감 있음
+  POOR        // 기부 불가
+}
+
+enum PickupMethod {
+  DELIVERY    // 택배
+  PICKUP      // 방문수거
+}
+
+enum DonationStatus {
+  PENDING     // 신청완료
+  CONFIRMED   // 수거확정
+  COLLECTED   // 수거완료
+  PROCESSED   // 처리완료
+  COMPLETED   // 포인트지급
+  REJECTED    // 거부
+}
