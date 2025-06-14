@@ -23,7 +23,6 @@ import type { User } from '@supabase/supabase-js';
 
 interface PredictionResult {
   condition: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
-  brand?: string;
   itemType: string;
   estimatedPoints: number;
   confidence: number;
@@ -104,7 +103,7 @@ export default function DonatePage() {
         },
         body: JSON.stringify({
           imageUrl: prediction.imageUrl,
-          brand: prediction.brand,
+
           itemType: prediction.itemType,
           condition: prediction.condition,
           estimatedPoints: prediction.estimatedPoints,
@@ -196,13 +195,6 @@ export default function DonatePage() {
                     <span className="text-sm font-medium">의류 종류</span>
                     <span className="text-sm">{prediction.itemType}</span>
                   </div>
-
-                  {prediction.brand && (
-                    <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
-                      <span className="text-sm font-medium">브랜드</span>
-                      <span className="text-sm">{prediction.brand}</span>
-                    </div>
-                  )}
 
                   <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg">
                     <span className="text-sm font-medium">예상 포인트</span>

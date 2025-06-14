@@ -23,7 +23,6 @@ import { createClient } from '@/lib/supabase';
 interface Donation {
   id: string;
   imageUrl: string;
-  brand?: string;
   itemType: string;
   condition: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
   estimatedPoints: number;
@@ -260,11 +259,6 @@ export default function MyPage() {
                             <div>
                               <h3 className="text-lg font-semibold">
                                 {donation.itemType}
-                                {donation.brand && (
-                                  <span className="text-gray-500 ml-2">
-                                    ({donation.brand})
-                                  </span>
-                                )}
                               </h3>
                               <p className="text-sm text-gray-600 flex items-center gap-1">
                                 <Calendar className="h-3 w-3" />

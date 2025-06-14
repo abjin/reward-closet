@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 
 interface PredictionResult {
   condition: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
-  brand?: string;
   itemType: string;
   estimatedPoints: number;
   confidence: number;
@@ -30,16 +29,6 @@ export async function POST(request: NextRequest) {
       'FAIR',
       'POOR',
     ];
-    const brands = [
-      'Nike',
-      'Adidas',
-      'Zara',
-      'H&M',
-      'Uniqlo',
-      'Calvin Klein',
-      '무신사',
-      '',
-    ];
     const itemTypes = [
       '티셔츠',
       '청바지',
@@ -66,7 +55,6 @@ export async function POST(request: NextRequest) {
 
     const prediction: PredictionResult = {
       condition: randomCondition,
-      brand: brands[Math.floor(Math.random() * brands.length)] || undefined,
       itemType: itemTypes[Math.floor(Math.random() * itemTypes.length)],
       estimatedPoints,
       confidence: Math.floor(Math.random() * 20) + 80, // 80-100%

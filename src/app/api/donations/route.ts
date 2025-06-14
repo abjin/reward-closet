@@ -17,7 +17,6 @@ export async function POST(request: NextRequest) {
 
     const {
       imageUrl,
-      brand,
       itemType,
       condition,
       estimatedPoints,
@@ -47,7 +46,6 @@ export async function POST(request: NextRequest) {
       data: {
         userId: dbUser.id,
         imageUrl,
-        brand: brand || null,
         itemType,
         condition,
         estimatedPoints: parseInt(estimatedPoints),

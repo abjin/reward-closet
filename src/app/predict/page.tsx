@@ -23,7 +23,6 @@ import { uploadImage, validateFile } from '@/lib/storage';
 
 interface PredictionResult {
   condition: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
-  brand?: string;
   itemType: string;
   estimatedPoints: number;
   confidence: number;
@@ -278,13 +277,6 @@ export default function PredictPage() {
                         <span className="text-sm font-medium">의류 종류</span>
                         <span className="text-sm">{prediction.itemType}</span>
                       </div>
-
-                      {prediction.brand && (
-                        <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
-                          <span className="text-sm font-medium">브랜드</span>
-                          <span className="text-sm">{prediction.brand}</span>
-                        </div>
-                      )}
 
                       <div className="flex justify-between items-center p-4 bg-blue-50 rounded-lg">
                         <span className="text-sm font-medium">예상 포인트</span>
