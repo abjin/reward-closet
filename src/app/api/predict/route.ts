@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { Condition } from '@prisma/client';
 
 interface PredictionResult {
-  condition: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
+  condition: Condition;
   itemType: string;
   estimatedPoints: number;
   confidence: number;
@@ -23,12 +24,7 @@ export async function POST(request: NextRequest) {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // Mock AI 예측 로직
-    const conditions: Array<'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR'> = [
-      'EXCELLENT',
-      'GOOD',
-      'FAIR',
-      'POOR',
-    ];
+    const conditions = Object.values(Condition);
     const itemTypes = [
       '티셔츠',
       '청바지',

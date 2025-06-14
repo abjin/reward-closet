@@ -19,23 +19,18 @@ import {
 } from 'lucide-react';
 import Header from '@/components/header';
 import { createClient } from '@/lib/supabase';
+import { Condition, PickupMethod, DonationStatus } from '@prisma/client';
 
 interface Donation {
   id: string;
   imageUrl: string;
   itemType: string;
-  condition: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
+  condition: Condition;
   estimatedPoints: number;
   actualPoints?: number;
-  pickupMethod: 'DELIVERY' | 'PICKUP';
+  pickupMethod: PickupMethod;
   address: string;
-  status:
-    | 'PENDING'
-    | 'CONFIRMED'
-    | 'COLLECTED'
-    | 'PROCESSED'
-    | 'COMPLETED'
-    | 'REJECTED';
+  status: DonationStatus;
   createdAt: string;
   updatedAt: string;
 }
@@ -288,7 +283,7 @@ export default function MyPage() {
                             <div>
                               <span className="text-gray-500">수거 방식</span>
                               <p className="font-medium">
-                                {donation.pickupMethod === 'DELIVERY'
+                                {donation.pickupMethod === PickupMethod.DELIVERY
                                   ? '택배'
                                   : '방문수거'}
                               </p>

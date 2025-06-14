@@ -20,9 +20,10 @@ import {
 } from 'lucide-react';
 import Header from '@/components/header';
 import { uploadImage, validateFile } from '@/lib/storage';
+import { Condition } from '@prisma/client';
 
 interface PredictionResult {
-  condition: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
+  condition: Condition;
   itemType: string;
   estimatedPoints: number;
   confidence: number;

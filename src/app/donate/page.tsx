@@ -20,9 +20,10 @@ import { Loader2, Truck, CheckCircle, Coins, Heart } from 'lucide-react';
 import Header from '@/components/header';
 import { createClient } from '@/lib/supabase';
 import type { User } from '@supabase/supabase-js';
+import { Condition, PickupMethod } from '@prisma/client';
 
 interface PredictionResult {
-  condition: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
+  condition: Condition;
   itemType: string;
   estimatedPoints: number;
   confidence: number;
@@ -31,8 +32,8 @@ interface PredictionResult {
 
 export default function DonatePage() {
   const [prediction, setPrediction] = useState<PredictionResult | null>(null);
-  const [pickupMethod, setPickupMethod] = useState<'DELIVERY' | 'PICKUP'>(
-    'DELIVERY'
+  const [pickupMethod, setPickupMethod] = useState<PickupMethod>(
+    PickupMethod.DELIVERY
   );
   const [address, setAddress] = useState('');
   const [detailAddress, setDetailAddress] = useState('');
@@ -229,7 +230,7 @@ export default function DonatePage() {
                     <Label>수거 방식</Label>
                     <Select
                       value={pickupMethod}
-                      onValueChange={(value: 'DELIVERY' | 'PICKUP') =>
+                      onValueChange={(value: PickupMethod) =>
                         setPickupMethod(value)
                       }
                     >
@@ -237,10 +238,10 @@ export default function DonatePage() {
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="DELIVERY">
+                        <SelectItem value={PickupMethod.DELIVERY}>
                           택배 수거 (무료)
                         </SelectItem>
-                        <SelectItem value="PICKUP">
+                        <SelectItem value={PickupMethod.PICKUP}>
                           방문 수거 (서울 지역)
                         </SelectItem>
                       </SelectContent>
