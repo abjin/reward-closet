@@ -30,26 +30,23 @@ function mapItemType(className: string): string {
 
 // AI 분류 결과를 기반으로 상태 판단
 function determineCondition(className: string): Condition {
-  // 손상 상태 라벨들
-  const damageLabels = ['ripped', 'pollution', 'tearing', 'frayed'];
-
-  if (damageLabels.includes(className)) {
+  if (className === 'pollution') {
     return Condition.POOR;
+  } else if (['ripped', 'tearing', 'frayed'].includes(className)) {
+    return Condition.FAIR;
   }
-
   return Condition.GOOD;
 }
 
 // condition에 따른 포인트 계산
 function calculatePoints(condition: Condition): number {
-  const pointRanges = {
-    [Condition.GOOD]: [200, 500],
-    [Condition.FAIR]: [50, 200],
-    [Condition.POOR]: [0, 0],
+  const points = {
+    [Condition.GOOD]: 500,
+    [Condition.FAIR]: 200,
+    [Condition.POOR]: 0,
   };
 
-  const [minPoints, maxPoints] = pointRanges[condition];
-  return Math.floor(Math.random() * (maxPoints - minPoints + 1)) + minPoints;
+  return points[condition];
 }
 
 export async function POST(request: NextRequest) {
