@@ -85,7 +85,6 @@ export default function MyPage() {
   };
 
   const conditionDetails = {
-    EXCELLENT: { title: '새상품', color: 'bg-green-100 text-green-800' },
     GOOD: { title: '양호', color: 'bg-blue-100 text-blue-800' },
     FAIR: { title: '사용감 있음', color: 'bg-yellow-100 text-yellow-800' },
     POOR: { title: '기부 불가', color: 'bg-red-100 text-red-800' },

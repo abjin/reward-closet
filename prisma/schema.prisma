@@ -50,7 +50,6 @@ model Donation {
 }
 
 enum Condition {
-  EXCELLENT   // 새상품
   GOOD        // 양호
   FAIR        // 사용감 있음
   POOR        // 기부 불가

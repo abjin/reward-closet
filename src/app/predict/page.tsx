@@ -39,12 +39,6 @@ export default function PredictPage() {
   const router = useRouter();
 
   const conditionDetails = {
-    EXCELLENT: {
-      title: '새상품',
-      color: 'bg-green-100 text-green-800',
-      icon: <Star className="h-4 w-4" />,
-      description: '매우 좋은 상태',
-    },
     GOOD: {
       title: '양호',
       color: 'bg-blue-100 text-blue-800',

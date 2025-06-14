@@ -1,29 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, AlertCircle, XCircle, Star } from 'lucide-react';
+import { CheckCircle, AlertCircle, XCircle } from 'lucide-react';
 import Header from '@/components/header';
 
 const conditionGuides = [
-  {
-    condition: 'EXCELLENT',
-    title: '새상품',
-    points: '500-1000P',
-    color: 'bg-green-100 text-green-800',
-    icon: <Star className="h-5 w-5" />,
-    description: '태그가 달린 새상품이거나 거의 착용하지 않은 상태',
-    criteria: [
-      '태그가 그대로 달려있는 새상품',
-      '1-2회 착용했지만 새것과 같은 상태',
-      '세탁 후 보관이 완벽한 상태',
-      '오염, 변색, 손상이 전혀 없음',
-      '브랜드 원래 모양이 그대로 유지',
-    ],
-    examples: [
-      '온라인 쇼핑몰에서 구매 후 교환/환불 기간 지난 새상품',
-      '선물받았지만 착용하지 않은 의류',
-      '한두 번 착용 후 옷장에 보관한 고급 브랜드',
-    ],
-  },
   {
     condition: 'GOOD',
     title: '양호',
