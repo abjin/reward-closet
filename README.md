@@ -22,9 +22,15 @@
 - 기부 히스토리 관리
 
 ### 👤 사용자 관리
-- Supabase 기반 안전한 회원가입/로그인
+- **Supabase Auth** 기반 안전한 회원가입/로그인
+- 이메일 인증 및 소셜 로그인 지원
 - 개인 기부 내역 및 포인트 관리
 - 마이페이지에서 전체 활동 현황 확인
+
+### 💾 파일 관리
+- **Supabase Storage** 활용 이미지 업로드
+- 자동 파일 크기 및 형식 검증 (최대 10MB, JPG/PNG/WebP)
+- CDN을 통한 빠른 이미지 서빙
 
 ## 🛠 기술 스택
 
@@ -41,6 +47,12 @@
 - **Prisma** - 타입 안전한 ORM
 - **MySQL** - 관계형 데이터베이스
 - **Supabase Auth** - 인증 시스템
+- **Supabase Storage** - 이미지 파일 저장소
+
+### 배포 & 인프라
+- **Vercel** - Next.js 최적화 호스팅 플랫폼
+- **Supabase** - Auth, Storage, 실시간 기능
+- **AWS Elastic Beanstalk** - AI API 서비스 호스팅
 
 ### 개발 도구
 - **ESLint** - 코드 품질 관리
@@ -118,7 +130,8 @@ model Donation {
 ### 사전 요구사항
 - Node.js 18 이상
 - MySQL 데이터베이스
-- Supabase 계정 (Auth 및 Storage 설정 필요)
+- **Supabase 계정** (Auth 및 Storage 설정 필요)
+- **Vercel 계정** (배포용, 무료 플랜 사용 가능)
 - AI API 서비스 (현재 외부 서비스 사용 중)
 
 ### 설치 및 실행
@@ -172,6 +185,36 @@ npm run dev
 ```
 
 애플리케이션이 [http://localhost:3000](http://localhost:3000)에서 실행됩니다.
+
+## 🌐 배포
+
+### Vercel 배포
+이 프로젝트는 Vercel에서 배포하도록 최적화되어 있습니다.
+
+1. **Vercel 배포**
+```bash
+# Vercel CLI 설치
+npm i -g vercel
+
+# 프로젝트 배포
+vercel --prod
+```
+
+2. **환경 변수 설정**
+Vercel 대시보드에서 다음 환경 변수를 설정하세요:
+```
+DATABASE_URL=your_mysql_database_url
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
+```
+
+### 서비스 구성
+- **호스팅**: Vercel (Next.js 최적화)
+- **인증**: Supabase Auth (소셜 로그인, 이메일 인증)
+- **스토리지**: Supabase Storage (이미지 파일 관리)
+- **데이터베이스**: MySQL (Prisma ORM, RDS)
+- **AI 분석**: AI API
 
 ## 📝 주요 스크립트
 
