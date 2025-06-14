@@ -41,6 +41,8 @@ interface UserProfile {
   nickname: string;
   points: number;
   createdAt: string;
+  totalDonations?: number;
+  completedDonations?: number;
 }
 
 export default function MyPage() {
@@ -48,6 +50,9 @@ export default function MyPage() {
   const [donations, setDonations] = useState<Donation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isEditingNickname, setIsEditingNickname] = useState(false);
+  const [newNickname, setNewNickname] = useState('');
+  const [updating, setUpdating] = useState(false);
   const router = useRouter();
   const supabase = createClient();
 
@@ -103,21 +108,21 @@ export default function MyPage() {
           return;
         }
 
+        // 사용자 정보 가져오기
+        const userResponse = await fetch('/api/user');
+        if (userResponse.ok) {
+          const userData = await userResponse.json();
+          setUser(userData);
+        } else {
+          throw new Error('사용자 정보를 가져올 수 없습니다.');
+        }
+
         // 기부 내역 가져오기
         const donationsResponse = await fetch('/api/donations');
         if (donationsResponse.ok) {
           const donationsData = await donationsResponse.json();
           setDonations(donationsData);
         }
-
-        // 임시 사용자 정보 (실제로는 API에서 가져와야 함)
-        setUser({
-          id: authUser.id,
-          email: authUser.email || '',
-          nickname: authUser.user_metadata?.nickname || 'User',
-          points: 1250, // 임시값
-          createdAt: authUser.created_at || new Date().toISOString(),
-        });
       } catch {
         setError('데이터를 불러오는 중 오류가 발생했습니다.');
       } finally {
@@ -134,6 +139,49 @@ export default function MyPage() {
       month: 'long',
       day: 'numeric',
     });
+  };
+
+  const handleNicknameEdit = () => {
+    setNewNickname(user?.nickname || '');
+    setIsEditingNickname(true);
+  };
+
+  const handleNicknameSave = async () => {
+    if (!newNickname.trim() || newNickname.trim().length < 2) {
+      setError('닉네임은 2글자 이상이어야 합니다.');
+      return;
+    }
+
+    setUpdating(true);
+    try {
+      const response = await fetch('/api/user', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ nickname: newNickname.trim() }),
+      });
+
+      if (response.ok) {
+        const updatedUser = await response.json();
+        setUser(updatedUser);
+        setIsEditingNickname(false);
+        setError('');
+      } else {
+        const errorData = await response.json();
+        setError(errorData.error || '닉네임 업데이트에 실패했습니다.');
+      }
+    } catch {
+      setError('닉네임 업데이트 중 오류가 발생했습니다.');
+    } finally {
+      setUpdating(false);
+    }
+  };
+
+  const handleNicknameCancel = () => {
+    setIsEditingNickname(false);
+    setNewNickname('');
+    setError('');
   };
 
   const totalEstimatedPoints = donations.reduce(
@@ -341,7 +389,45 @@ export default function MyPage() {
                 <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <span className="text-sm text-gray-500">닉네임</span>
-                    <p className="font-medium">{user.nickname}</p>
+                    {isEditingNickname ? (
+                      <div className="flex gap-2 mt-1">
+                        <input
+                          type="text"
+                          value={newNickname}
+                          onChange={(e) => setNewNickname(e.target.value)}
+                          className="flex-1 px-2 py-1 border border-gray-300 rounded text-sm"
+                          placeholder="닉네임을 입력하세요"
+                          disabled={updating}
+                        />
+                        <Button
+                          size="sm"
+                          onClick={handleNicknameSave}
+                          disabled={updating}
+                        >
+                          저장
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={handleNicknameCancel}
+                          disabled={updating}
+                        >
+                          취소
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2">
+                        <p className="font-medium">{user.nickname}</p>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={handleNicknameEdit}
+                          className="h-6 px-2 text-xs"
+                        >
+                          편집
+                        </Button>
+                      </div>
+                    )}
                   </div>
                   <div>
                     <span className="text-sm text-gray-500">이메일</span>
@@ -356,6 +442,11 @@ export default function MyPage() {
                     <p className="font-medium text-blue-600">{user.points}P</p>
                   </div>
                 </div>
+                {updating && (
+                  <div className="mt-4 text-sm text-blue-600">
+                    업데이트 중...
+                  </div>
+                )}
               </CardContent>
             </Card>
           )}
