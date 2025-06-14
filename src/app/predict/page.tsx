@@ -19,6 +19,7 @@ import {
   ArrowRight,
 } from 'lucide-react';
 import Header from '@/components/header';
+import { uploadImage, validateFile } from '@/lib/storage';
 
 interface PredictionResult {
   condition: 'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR';
@@ -67,14 +68,10 @@ export default function PredictPage() {
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      if (file.size > 10 * 1024 * 1024) {
-        // 10MB 제한
-        setError('파일 크기는 10MB 이하여야 합니다.');
-        return;
-      }
-
-      if (!file.type.startsWith('image/')) {
-        setError('이미지 파일만 업로드 가능합니다.');
+      // 파일 검증
+      const validation = validateFile(file);
+      if (!validation.isValid) {
+        setError(validation.error || '잘못된 파일입니다.');
         return;
       }
 
@@ -152,13 +149,26 @@ export default function PredictPage() {
     setError('');
 
     try {
-      // 실제 구현에서는 Supabase Storage에 업로드하고 AI API 호출
-      // 여기서는 mock 데이터로 시뮬레이션
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // 2초 대기 (AI 분석 시뮬레이션)
+      // Supabase Storage에 이미지 업로드
+      const uploadResult = await uploadImage(selectedFile);
+      console.log(uploadResult.url);
+
+      if (uploadResult.error) {
+        setError(`업로드 실패: ${uploadResult.error}`);
+        return;
+      }
+
+      // 실제 구현에서는 여기서 AI API를 호출합니다
+      // 현재는 mock 데이터로 시뮬레이션
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // AI 분석 시뮬레이션
 
       const result = mockAIPrediction();
+      // 업로드된 이미지 URL로 교체
+      result.imageUrl = uploadResult.url;
+
       setPrediction(result);
-    } catch {
+    } catch (error) {
+      console.error('Prediction error:', error);
       setError('예측 중 오류가 발생했습니다. 다시 시도해주세요.');
     } finally {
       setLoading(false);
