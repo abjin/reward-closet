@@ -88,55 +88,23 @@ export default function PredictPage() {
     }
   };
 
-  const mockAIPrediction = (): PredictionResult => {
-    const conditions: Array<'EXCELLENT' | 'GOOD' | 'FAIR' | 'POOR'> = [
-      'EXCELLENT',
-      'GOOD',
-      'FAIR',
-      'POOR',
-    ];
-    const brands = [
-      'Nike',
-      'Adidas',
-      'Zara',
-      'H&M',
-      'Uniqlo',
-      'Calvin Klein',
-      '무신사',
-      '',
-    ];
-    const itemTypes = [
-      '티셔츠',
-      '청바지',
-      '후드',
-      '셔츠',
-      '니트',
-      '자켓',
-      '코트',
-      '원피스',
-    ];
+  const callPredictAPI = async (
+    imageUrl: string
+  ): Promise<PredictionResult> => {
+    const response = await fetch('/api/predict', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ imageUrl }),
+    });
 
-    const randomCondition =
-      conditions[Math.floor(Math.random() * conditions.length)];
-    const pointRanges = {
-      EXCELLENT: [500, 1000],
-      GOOD: [200, 500],
-      FAIR: [50, 200],
-      POOR: [0, 0],
-    };
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || '예측 API 호출에 실패했습니다.');
+    }
 
-    const [minPoints, maxPoints] = pointRanges[randomCondition];
-    const estimatedPoints =
-      Math.floor(Math.random() * (maxPoints - minPoints + 1)) + minPoints;
-
-    return {
-      condition: randomCondition,
-      brand: brands[Math.floor(Math.random() * brands.length)] || undefined,
-      itemType: itemTypes[Math.floor(Math.random() * itemTypes.length)],
-      estimatedPoints,
-      confidence: Math.floor(Math.random() * 20) + 80, // 80-100%
-      imageUrl: preview || '',
-    };
+    return response.json();
   };
 
   const handlePredict = async () => {
@@ -158,13 +126,8 @@ export default function PredictPage() {
         return;
       }
 
-      // 실제 구현에서는 여기서 AI API를 호출합니다
-      // 현재는 mock 데이터로 시뮬레이션
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // AI 분석 시뮬레이션
-
-      const result = mockAIPrediction();
-      // 업로드된 이미지 URL로 교체
-      result.imageUrl = uploadResult.url;
+      // AI 예측 API 호출
+      const result = await callPredictAPI(uploadResult.url);
 
       setPrediction(result);
     } catch (error) {
