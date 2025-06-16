@@ -36,7 +36,7 @@ Reward Closet은 최첨단 AI 기술을 활용하여:
 
 - **🌐 웹 애플리케이션**: [https://reward-closet.vercel.app](https://reward-closet.vercel.app)
 - **⚡ AI API 서버 저장소**: [https://github.com/abjin/reward-closet-ai-api-server](https://github.com/abjin/reward-closet-ai-api-server)
-- **📚 AI API 문서**: [https://reward-closet-ai-api.eba-by6v3rd4.ap-northeast-2.elasticbeanstalk.com/docs](https://reward-closet-ai-api.eba-by6v3rd4.ap-northeast-2.elasticbeanstalk.com/docs)
+- **📚 AI API 문서**: [http://reward-closet-ai-api.eba-by6v3rd4.ap-northeast-2.elasticbeanstalk.com/docs](http://reward-closet-ai-api.eba-by6v3rd4.ap-northeast-2.elasticbeanstalk.com/docs)
 
 ## 🏗 시스템 아키텍처
 
