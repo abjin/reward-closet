@@ -80,6 +80,10 @@ The diagram above illustrates the core components and data flow of the Reward Cl
 
 ## 🛠 Tech Stack
 
+### Artificial Intelligence
+- **Python** - Base framework
+- **YOLO** - Special library & models for computer vision
+
 ### Frontend
 - **Next.js 15** - React-based full-stack framework
 - **React 19** - Latest React version
@@ -107,33 +111,37 @@ The diagram above illustrates the core components and data flow of the Reward Cl
 ## 📁 Project Structure
 
 ```
+data/
+├── preprocessing.ipynb  # Data preprocessing
+└── clothes.yaml         # YOLO formatted data file
+
+prisma/
+├── schema.prisma        # Database schema
+└── migrations/          # Database migrations
+
 src/
-├── app/                    # Next.js App Router pages
-│   ├── page.tsx           # Home page
-│   ├── login/             # Login page
-│   ├── signup/            # Sign up page
-│   ├── predict/           # AI prediction page
-│   ├── donate/            # Donation application page
-│   ├── mypage/            # My page
-│   ├── guide/             # Donation guide
-│   └── api/               # API routes
-│       ├── users/         # User-related API
-│       ├── donations/     # Donation-related API
-│       ├── predict/       # AI prediction API
-│       └── user/          # Individual user API
-├── components/            # Reusable components
-│   ├── ui/               # Basic UI components
-│   └── header.tsx        # Common header
-├── lib/                  # Utilities and configurations
+├── app/                 # Next.js App Router pages
+│   ├── page.tsx         # Home page
+│   ├── login/           # Login page
+│   ├── signup/          # Sign up page
+│   ├── predict/         # AI prediction page
+│   ├── donate/          # Donation application page
+│   ├── mypage/          # My page
+│   ├── guide/           # Donation guide
+│   └── api/             # API routes
+│       ├── users/       # User-related API
+│       ├── donations/   # Donation-related API
+│       ├── predict/     # AI prediction API
+│       └── user/        # Individual user API
+├── components/          # Reusable components
+│   ├── ui/              # Basic UI components
+│   └── header.tsx       # Common header
+├── lib/                 # Utilities and configurations
 │   ├── supabase.ts      # Supabase client
 │   ├── prisma.ts        # Prisma client
 │   ├── storage.ts       # File storage related
 │   └── utils.ts         # Common utilities
 └── middleware.ts        # Next.js middleware
-
-prisma/
-├── schema.prisma        # Database schema
-└── migrations/          # Database migrations
 ```
 
 ## 📊 Database Models
@@ -180,7 +188,24 @@ model Donation {
 - **Vercel account** (for deployment, free plan available)
 - AI API service (currently using external service)
 
-### Installation & Setup
+### Training AI
+1. **Download Dataset** (refer to [dataset description](##-🤖-AI-Features-Details))
+
+2. **Preprocessing**
+   - Please refer to preprocessing.ipynb
+
+3. **Training**
+```bash
+yolo detect train data=clothes.yaml model=yolo11n.pt epochs=100 imgsz=640 seed=42 optimizer='Adam' \
+     lr0=1e-4 batch=16 cos_lr=True dropout=0.05
+```
+
+4. **Inference**
+```bash
+yolo predict model='//PATH/TO/YOUR/TRAINED/MODEL.pt' imgsz=640 conf=0.25
+```
+
+### FrontEnd & BackEnd Installation & Setup
 
 1. **Clone the repository**
 ```bash
@@ -273,6 +298,14 @@ npm run lint       # Run ESLint
 
 ## 🤖 AI Features Details
 
+### Dataset
+- **Original Dataset Source**: [Waste Clothing Recycling Classification and Screening Data (AI-Hub)](https://www.aihub.or.kr/aihubdata/data/view.do?currMenu=115&topMenu=100&dataSetSn=71822)
+- **Data Preprocessing**: Change to YOLO format and integrate data classes (15 classes -> 13 classes) (Details in preprocessing.ipynb)
+
+### Training Details
+- **Model**: YOLO11n (super light model)
+- **Train/Validation Split**: Split train/validation to 8 : 2 (class stratified split)
+
 ### AI Clothing Analysis API
 - **AI Server Repository**: [reward-closet-ai-api-server](https://github.com/abjin/reward-closet-ai-api-server)
 - **Framework**: FastAPI with PyTorch TorchScript models
@@ -280,12 +313,13 @@ npm run lint       # Run ESLint
 - **API Endpoint**: `/models/clothes/predict`
 
 ### Supported Categories
-**Clothing Types (15 categories)**:
+**Clothing Types (11 categories)**:
 - jacket, short pants, tailored pants, jumper, shirts
 - coat, dress, casual pants, blouse, tshirts, skirt
 
-**Defect Detection**:
-- ripped, pollution, tearing, frayed
+**Defect Detection (5 categories -> 2 categories)**:
+- Original: ripped, pollution, tearing, frayed
+- Ours: tearing, pollution
 
 ### Condition Classification & Points
 - **Good Condition** (500P): No defects detected
