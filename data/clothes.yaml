@@ -1,0 +1,21 @@
+# Train/val/test sets as 1) dir: path/to/imgs, 2) file: path/to/imgs.txt, or 3) list: [path/to/imgs1, path/to/imgs2, ..]
+path: /home/data # dataset root dir
+train: train # 64,012 imgs
+val: val # 15,988 imgs
+test: test # 10,000 imgs
+
+# Classes
+names:
+  0: jacket
+  1: short pants
+  2: tailored pants
+  3: jumper
+  4: shirts
+  5: coat
+  6: dress
+  7: casual pants
+  8: blouse
+  9: tshirts
+  10: skirt
+  11: tearing    # 뜯어짐
+  12: pollution  # 외부오염
