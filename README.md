@@ -4,12 +4,58 @@
 
 A web application that analyzes clothing condition using AI to predict reward points and enables easy clothing donations.
 
+## 📖 Introduction
+
+### Project Overview
+Reward Closet is an innovative platform that bridges the gap between clothing waste and charitable giving through artificial intelligence. Our mission is to make clothing donations more accessible, transparent, and rewarding for everyone involved.
+
+### The Problem We're Solving
+- **Clothing Waste Crisis**: Millions of tons of clothing end up in landfills each year, contributing to environmental pollution
+- **Donation Barriers**: Traditional donation processes are often complicated, time-consuming, and lack transparency
+- **Value Uncertainty**: Donors have no clear understanding of their clothing's worth or impact
+- **Limited Incentives**: Current donation systems provide minimal motivation for regular participation
+
+### Our Motivation
+We believe that technology can transform how we approach sustainable consumption and charitable giving. By combining AI-powered assessment with a transparent reward system, we aim to:
+
+- **Reduce Textile Waste**: Make it easier for people to donate instead of discarding
+- **Increase Donation Participation**: Provide clear value and rewards to encourage regular donations
+- **Enhance Transparency**: Use technology to show donors the real impact of their contributions
+- **Build Community**: Create a platform where giving back becomes engaging and social
+
+### Our Solution
+Reward Closet leverages cutting-edge AI technology to:
+- **Instantly Assess**: AI analyzes clothing condition and provides immediate value estimates
+- **Reward Generosity**: Points-based system that recognizes and rewards donors
+- **Simplify Process**: One-click donation system with flexible pickup options
+- **Track Impact**: Real-time tracking of donation status and community impact
+
+By making donations rewarding, transparent, and effortless, we're creating a sustainable ecosystem where everyone wins – donors feel valued, recipients get quality clothing, and the environment benefits from reduced waste.
+
+## 🔗 Project Links
+
+- **🌐 Web Application**: [https://reward-closet.vercel.app](https://reward-closet.vercel.app)
+- **⚡ AI API Server Repository**: [https://github.com/abjin/reward-closet-ai-api-server](https://github.com/abjin/reward-closet-ai-api-server)
+- **📚 AI API Documentation**: [https://reward-closet-ai-api.eba-by6v3rd4.ap-northeast-2.elasticbeanstalk.com/docs](https://reward-closet-ai-api.eba-by6v3rd4.ap-northeast-2.elasticbeanstalk.com/docs)
+
+## 🏗 Representative block diagram (System Architecture)
+
+![System Architecture](diagram.png)
+
+The diagram above illustrates the core components and data flow of the Reward Closet platform:
+
+- **User**: Interacts with the web application
+- **Web App**: Next.js application hosted on Vercel
+- **AI Server**: FastAPI-based clothing analysis service on AWS
+- **Database**: MySQL database for user data and donation records
+- **Supabase**: Handles authentication and image storage
+
 ## ✨ Key Features
 
 ### 🤖 AI Clothing Condition Prediction
 - AI analyzes uploaded clothing photos to evaluate condition
 - Provides estimated reward points based on clothing condition
-- Automatic analysis of brand, item type, and condition
+- Automatic analysis of item type, and condition
 
 ### 💝 Simple Donation System
 - One-click donation application
@@ -138,7 +184,7 @@ model Donation {
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/your-username/reward-closet.git
+git clone https://github.com/abjin/reward-closet.git
 cd reward-closet
 ```
 
@@ -214,7 +260,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 - **Authentication**: Supabase Auth (social login, email verification)
 - **Storage**: Supabase Storage (image file management)
 - **Database**: MySQL (Prisma ORM, RDS)
-- **AI Analysis**: External AI API service
+- **AI Analysis**: [FastAPI Server](https://github.com/abjin/reward-closet-ai-api-server) on AWS Elastic Beanstalk
 
 ## 📝 Scripts
 
@@ -228,10 +274,23 @@ npm run lint       # Run ESLint
 ## 🤖 AI Features Details
 
 ### AI Clothing Analysis API
-- **External AI Service**: Hosted on AWS Elastic Beanstalk
-- **Analysis Items**: Clothing type, condition, damage level
-- **Supported Categories**: Jackets, shirts, pants, dresses, skirts, etc.
-- **Condition Classification**: Good (500P), Fair (200P), Poor (0P)
+- **AI Server Repository**: [reward-closet-ai-api-server](https://github.com/abjin/reward-closet-ai-api-server)
+- **Framework**: FastAPI with PyTorch TorchScript models
+- **Platform**: AWS Elastic Beanstalk
+- **API Endpoint**: `/models/clothes/predict`
+
+### Supported Categories
+**Clothing Types (15 categories)**:
+- jacket, short pants, tailored pants, jumper, shirts
+- coat, dress, casual pants, blouse, tshirts, skirt
+
+**Defect Detection**:
+- ripped, pollution, tearing, frayed
+
+### Condition Classification & Points
+- **Good Condition** (500P): No defects detected
+- **Fair Condition** (200P): Minor defects (wear, slight damage)
+- **Poor Condition** (0P): Major defects (tears, stains, severe damage)
 
 ## 🌟 Main Pages
 

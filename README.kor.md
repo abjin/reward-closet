@@ -4,12 +4,58 @@
 
 입지 않는 옷을 AI로 상태를 분석하여 예상 보상 포인트를 확인하고, 간편하게 기부할 수 있는 웹 애플리케이션입니다.
 
+## 📖 소개
+
+### 프로젝트 개요
+Reward Closet은 인공지능을 통해 의류 폐기물과 자선 기부 사이의 격차를 해소하는 혁신적인 플랫폼입니다. 모든 사람이 더 쉽고, 투명하며, 보람 있는 의류 기부를 할 수 있도록 하는 것이 우리의 사명입니다.
+
+### 우리가 해결하고자 하는 문제
+- **의류 폐기물 위기**: 매년 수백만 톤의 의류가 매립지로 가면서 환경 오염을 야기합니다
+- **기부 장벽**: 기존의 기부 과정은 복잡하고 시간이 많이 걸리며 투명성이 부족합니다
+- **가치 불확실성**: 기부자들은 자신의 옷이 얼마나 가치 있는지, 어떤 영향을 미치는지 명확히 알 수 없습니다
+- **제한적인 인센티브**: 현재의 기부 시스템은 지속적인 참여에 대한 동기 부여가 부족합니다
+
+### 우리의 동기
+우리는 기술이 지속 가능한 소비와 자선 기부에 대한 접근 방식을 변화시킬 수 있다고 믿습니다. AI 기반 평가와 투명한 보상 시스템을 결합하여 다음을 목표로 합니다:
+
+- **섬유 폐기물 감소**: 사람들이 버리는 대신 기부하기 쉽게 만들기
+- **기부 참여 증대**: 명확한 가치와 보상을 제공하여 정기적인 기부를 장려
+- **투명성 향상**: 기술을 사용하여 기부자에게 기여의 실제 영향을 보여주기
+- **커뮤니티 구축**: 기부가 참여형이고 사회적인 활동이 되는 플랫폼 만들기
+
+### 우리의 솔루션
+Reward Closet은 최첨단 AI 기술을 활용하여:
+- **즉시 평가**: AI가 의류 상태를 분석하고 즉시 가치를 추정합니다
+- **관대함에 보상**: 기부자를 인정하고 보상하는 포인트 기반 시스템
+- **프로세스 간소화**: 유연한 수거 옵션이 있는 원클릭 기부 시스템
+- **영향 추적**: 기부 상태와 커뮤니티 영향의 실시간 추적
+
+기부를 보람되고, 투명하며, 쉽게 만들어서 모든 사람이 이기는 지속 가능한 생태계를 만들고 있습니다. 기부자는 가치를 인정받고, 수혜자는 양질의 의류를 받으며, 환경은 폐기물 감소의 혜택을 누립니다.
+
+## 🔗 프로젝트 링크
+
+- **🌐 웹 애플리케이션**: [https://reward-closet.vercel.app](https://reward-closet.vercel.app)
+- **⚡ AI API 서버 저장소**: [https://github.com/abjin/reward-closet-ai-api-server](https://github.com/abjin/reward-closet-ai-api-server)
+- **📚 AI API 문서**: [https://reward-closet-ai-api.eba-by6v3rd4.ap-northeast-2.elasticbeanstalk.com/docs](https://reward-closet-ai-api.eba-by6v3rd4.ap-northeast-2.elasticbeanstalk.com/docs)
+
+## 🏗 시스템 아키텍처
+
+![시스템 아키텍처](diagram.png)
+
+위 다이어그램은 Reward Closet 플랫폼의 핵심 구성요소와 데이터 흐름을 보여줍니다:
+
+- **사용자**: 웹 애플리케이션과 상호작용
+- **웹 앱**: Vercel에서 호스팅되는 Next.js 애플리케이션
+- **AI 서버**: AWS의 FastAPI 기반 의류 분석 서비스
+- **데이터베이스**: 사용자 데이터와 기부 기록을 위한 MySQL 데이터베이스
+- **Supabase**: 인증 및 이미지 저장소 처리
+
 ## ✨ 주요 기능
 
 ### 🤖 AI 옷 상태 예측
 - 업로드한 옷 사진을 AI가 분석하여 상태를 평가
 - 옷 상태에 따른 예상 보상 포인트 제공
-- 브랜드, 아이템 타입, 컨디션 자동 분석
+- 아이템 타입, 컨디션 자동 분석
 
 ### 💝 간편한 기부 시스템
 - 한 번의 클릭으로 기부 신청
@@ -138,7 +184,7 @@ model Donation {
 
 1. **저장소 클론**
 ```bash
-git clone https://github.com/your-username/reward-closet.git
+git clone https://github.com/abjin/reward-closet.git
 cd reward-closet
 ```
 
@@ -214,7 +260,7 @@ SUPABASE_SERVICE_ROLE_KEY=your_supabase_service_role_key
 - **인증**: Supabase Auth (소셜 로그인, 이메일 인증)
 - **스토리지**: Supabase Storage (이미지 파일 관리)
 - **데이터베이스**: MySQL (Prisma ORM, RDS)
-- **AI 분석**: AI API
+- **AI 분석**: [FastAPI 서버](https://github.com/abjin/reward-closet-ai-api-server) (AWS Elastic Beanstalk)
 
 ## 📝 주요 스크립트
 
@@ -228,10 +274,23 @@ npm run lint       # ESLint 검사
 ## 🤖 AI 기능 상세
 
 ### AI 의류 분석 API
-- **외부 AI 서비스**: AWS Elastic Beanstalk에서 호스팅
-- **분석 항목**: 의류 종류, 상태, 손상 정도
-- **지원 카테고리**: 자켓, 셔츠, 바지, 원피스, 치마 등
-- **상태 분류**: 양호(500P), 사용감 있음(200P), 기부 불가(0P)
+- **AI 서버 저장소**: [reward-closet-ai-api-server](https://github.com/abjin/reward-closet-ai-api-server)
+- **프레임워크**: FastAPI + PyTorch TorchScript 모델
+- **플랫폼**: AWS Elastic Beanstalk
+- **API 엔드포인트**: `/models/clothes/predict`
+
+### 지원 카테고리
+**의류 종류 (15개 카테고리)**:
+- jacket, short pants, tailored pants, jumper, shirts
+- coat, dress, casual pants, blouse, tshirts, skirt
+
+**결함 감지**:
+- ripped (찢어짐), pollution (오염), tearing (찢어짐), frayed (헤짐)
+
+### 상태 분류 및 포인트
+- **양호한 상태** (500P): 결함 없음
+- **사용감 있음** (200P): 경미한 결함 (마모, 약간의 손상)
+- **기부 불가** (0P): 심각한 결함 (찢어짐, 얼룩, 심한 손상)
 
 ## 🌟 주요 페이지
 
