@@ -32,7 +32,7 @@ function mapItemType(className: string): string {
 function determineCondition(className: string): Condition {
   if (className === 'pollution') {
     return Condition.POOR;
-  } else if (['ripped', 'tearing', 'frayed'].includes(className)) {
+  } else if (className === 'tearing') {
     return Condition.FAIR;
   }
   return Condition.GOOD;
