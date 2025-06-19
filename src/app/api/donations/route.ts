@@ -1,15 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { createServerActionClient } from '@/lib/supabase-server';
+import { getCurrentUser } from '@/lib/auth';
 
 export async function POST(request: NextRequest) {
   try {
-    const supabase = await createServerActionClient();
-
     // 사용자 인증 확인
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const user = await getCurrentUser();
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -34,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     // 사용자 정보 조회
     const dbUser = await prisma.user.findUnique({
-      where: { supabaseId: user.id },
+      where: { id: user.userId },
     });
 
     if (!dbUser) {
@@ -67,12 +63,8 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
-    const supabase = await createServerActionClient();
-
     // 사용자 인증 확인
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    const user = await getCurrentUser();
 
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -80,7 +72,7 @@ export async function GET() {
 
     // 사용자 정보 조회
     const dbUser = await prisma.user.findUnique({
-      where: { supabaseId: user.id },
+      where: { id: user.userId },
     });
 
     if (!dbUser) {

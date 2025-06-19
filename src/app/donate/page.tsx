@@ -18,9 +18,14 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, Truck, CheckCircle, Coins, Heart } from 'lucide-react';
 import Header from '@/components/header';
-import { createClient } from '@/lib/supabase';
-import type { User } from '@supabase/supabase-js';
+import { getCurrentUser } from '@/lib/auth-client';
 import { Condition, PickupMethod } from '@prisma/client';
+
+interface User {
+  id: string;
+  email: string;
+  nickname: string;
+}
 
 interface PredictionResult {
   condition: Condition;
@@ -43,7 +48,6 @@ export default function DonatePage() {
   const [error, setError] = useState('');
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
-  const supabase = createClient();
 
   useEffect(() => {
     // 예측 결과 가져오기
@@ -58,14 +62,17 @@ export default function DonatePage() {
 
     // 사용자 정보 가져오기
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
+      try {
+        const userData = await getCurrentUser();
+        setUser(userData);
+      } catch (error) {
+        console.error('Failed to get user:', error);
+        router.push('/login');
+      }
     };
 
     getUser();
-  }, [router, supabase.auth]);
+  }, [router]);
 
   const conditionDetails = {
     GOOD: { title: '양호', color: 'bg-blue-100 text-blue-800' },

@@ -17,7 +17,8 @@ model User {
   id          String    @id @default(cuid())
   email       String    @unique
   nickname    String
-  supabaseId  String    @unique
+  password    String?   // JWT 인증용 비밀번호
+  supabaseId  String?   @unique // Supabase 스토리지 호환성을 위해 유지
   points      Int       @default(0)
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt

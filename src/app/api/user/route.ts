@@ -1,19 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerActionClient } from '@/lib/supabase-server';
+import { getCurrentUser } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 
 // 사용자 정보 조회
 export async function GET() {
   try {
-    const supabase = await createServerActionClient();
-
     // 현재 로그인한 사용자 확인
-    const {
-      data: { user: authUser },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const authUser = await getCurrentUser();
 
-    if (authError || !authUser) {
+    if (!authUser) {
       return NextResponse.json(
         { error: '인증이 필요합니다.' },
         { status: 401 }
@@ -23,7 +18,7 @@ export async function GET() {
     // 데이터베이스에서 사용자 정보 조회
     let user = await prisma.user.findUnique({
       where: {
-        supabaseId: authUser.id,
+        id: authUser.userId,
       },
       include: {
         donations: {
@@ -36,25 +31,11 @@ export async function GET() {
       },
     });
 
-    // 사용자가 데이터베이스에 없으면 생성
     if (!user) {
-      user = await prisma.user.create({
-        data: {
-          supabaseId: authUser.id,
-          email: authUser.email || '',
-          nickname: authUser.user_metadata?.nickname || 'User',
-          points: 0,
-        },
-        include: {
-          donations: {
-            select: {
-              id: true,
-              actualPoints: true,
-              status: true,
-            },
-          },
-        },
-      });
+      return NextResponse.json(
+        { error: '사용자를 찾을 수 없습니다.' },
+        { status: 404 }
+      );
     }
 
     // 완료된 기부에서 실제 포인트 합계 계산
@@ -108,15 +89,10 @@ export async function GET() {
 // 사용자 정보 업데이트
 export async function PUT(request: NextRequest) {
   try {
-    const supabase = await createServerActionClient();
-
     // 현재 로그인한 사용자 확인
-    const {
-      data: { user: authUser },
-      error: authError,
-    } = await supabase.auth.getUser();
+    const authUser = await getCurrentUser();
 
-    if (authError || !authUser) {
+    if (!authUser) {
       return NextResponse.json(
         { error: '인증이 필요합니다.' },
         { status: 401 }
@@ -135,7 +111,7 @@ export async function PUT(request: NextRequest) {
     // 데이터베이스에서 사용자 정보 업데이트
     const updatedUser = await prisma.user.update({
       where: {
-        supabaseId: authUser.id,
+        id: authUser.userId,
       },
       data: {
         nickname: nickname.trim(),

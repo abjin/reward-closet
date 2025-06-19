@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase';
+import { signup } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -20,7 +20,6 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-  const supabase = createClient();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,48 +40,15 @@ export default function SignupPage() {
     }
 
     try {
-      // Supabase Auth 회원가입
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            nickname,
-          },
-        },
-      });
+      const result = await signup({ email, password, nickname });
 
-      if (error) {
-        if (error.message.includes('already registered')) {
-          setError('이미 등록된 이메일입니다.');
-        } else {
-          setError(error.message);
-        }
+      if (!result.success) {
+        setError(result.message || '회원가입에 실패했습니다.');
         return;
       }
 
-      if (data.user) {
-        // 사용자 정보를 데이터베이스에 저장
-        const response = await fetch('/api/users', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email,
-            nickname,
-            supabaseId: data.user.id,
-          }),
-        });
-
-        if (!response.ok) {
-          console.error('Failed to create user in database');
-        }
-
-        router.push(
-          '/login?message=회원가입이 완료되었습니다. 로그인해주세요.'
-        );
-      }
+      router.push('/mypage');
+      router.refresh(); // 페이지 새로고침으로 인증 상태 업데이트
     } catch {
       setError('회원가입 중 오류가 발생했습니다.');
     } finally {

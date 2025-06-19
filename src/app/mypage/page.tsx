@@ -18,7 +18,7 @@ import {
   Calendar,
 } from 'lucide-react';
 import Header from '@/components/header';
-import { createClient } from '@/lib/supabase';
+import { getCurrentUser } from '@/lib/auth-client';
 import { Condition, PickupMethod, DonationStatus } from '@prisma/client';
 
 interface Donation {
@@ -54,7 +54,6 @@ export default function MyPage() {
   const [newNickname, setNewNickname] = useState('');
   const [updating, setUpdating] = useState(false);
   const router = useRouter();
-  const supabase = createClient();
 
   const statusDetails = {
     PENDING: {
@@ -99,9 +98,7 @@ export default function MyPage() {
     const fetchData = async () => {
       try {
         // 사용자 인증 확인
-        const {
-          data: { user: authUser },
-        } = await supabase.auth.getUser();
+        const authUser = await getCurrentUser();
 
         if (!authUser) {
           router.push('/login');
@@ -131,7 +128,7 @@ export default function MyPage() {
     };
 
     fetchData();
-  }, [router, supabase.auth]);
+  }, [router]);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('ko-KR', {

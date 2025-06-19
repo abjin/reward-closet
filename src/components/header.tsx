@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { createClient } from '@/lib/supabase';
+import { logout, getCurrentUser } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,40 +13,44 @@ import {
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Shirt, LogOut, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import type { User as SupabaseUser } from '@supabase/supabase-js';
+
+interface User {
+  id: string;
+  email: string;
+  nickname: string;
+}
 
 export default function Header() {
-  const [user, setUser] = useState<SupabaseUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const supabase = createClient();
 
   useEffect(() => {
     // 현재 사용자 상태 확인
     const getUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      setUser(user);
-      setLoading(false);
+      try {
+        const userData = await getCurrentUser();
+        setUser(userData);
+      } catch (error) {
+        console.error('Failed to get user:', error);
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
     getUser();
-
-    // 인증 상태 변화 감지
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user || null);
-      setLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
-  }, [supabase.auth]);
+  }, []);
 
   const handleSignOut = async () => {
-    await supabase.auth.signOut();
-    router.push('/');
+    try {
+      await logout();
+      setUser(null);
+      router.push('/');
+      router.refresh();
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
   };
 
   return (
@@ -80,7 +84,8 @@ export default function Header() {
                 >
                   <Avatar className="h-8 w-8">
                     <AvatarFallback>
-                      {user.email?.charAt(0).toUpperCase()}
+                      {user.nickname?.charAt(0).toUpperCase() ||
+                        user.email?.charAt(0).toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                 </Button>

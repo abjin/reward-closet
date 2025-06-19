@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { createClient } from '@/lib/supabase';
+import { login } from '@/lib/auth-client';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -18,7 +18,6 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-  const supabase = createClient();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -26,17 +25,15 @@ export default function LoginPage() {
     setError('');
 
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
+      const result = await login({ email, password });
 
-      if (error) {
-        setError('이메일 또는 비밀번호가 올바르지 않습니다.');
+      if (!result.success) {
+        setError(result.message || '로그인에 실패했습니다.');
         return;
       }
 
       router.push('/mypage');
+      router.refresh(); // 페이지 새로고침으로 인증 상태 업데이트
     } catch {
       setError('로그인 중 오류가 발생했습니다.');
     } finally {

@@ -1,4 +1,4 @@
-import { createClient } from './supabase';
+import { createStorageClient } from './supabase-storage';
 
 export interface UploadResult {
   url: string;
@@ -19,7 +19,7 @@ export async function uploadImage(
   folder: string = 'public'
 ): Promise<UploadResult> {
   try {
-    const supabase = createClient();
+    const supabase = createStorageClient();
 
     // 파일 확장자 추출
     const fileExt = file.name.split('.').pop();
@@ -82,7 +82,7 @@ export async function deleteImage(
   bucket: string = 'clothing-images'
 ): Promise<boolean> {
   try {
-    const supabase = createClient();
+    const supabase = createStorageClient();
 
     const { error } = await supabase.storage.from(bucket).remove([path]);
 
