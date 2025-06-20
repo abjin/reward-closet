@@ -37,6 +37,7 @@ By making donations rewarding, transparent, and effortless, we're creating a sus
 - **🌐 Web Application**: [https://reward-closet.vercel.app](https://reward-closet.vercel.app)
 - **⚡ AI API Server Repository**: [https://github.com/abjin/reward-closet-ai-api-server](https://github.com/abjin/reward-closet-ai-api-server)
 - **📚 AI API Documentation**: [http://reward-closet-ai-api.eba-by6v3rd4.ap-northeast-2.elasticbeanstalk.com/docs](http://reward-closet-ai-api.eba-by6v3rd4.ap-northeast-2.elasticbeanstalk.com/docs)
+- **📺 Youtube Video**: [https://youtu.be/X4Cu6lpv5bM](https://youtu.be/X4Cu6lpv5bM)
 
 ## 🏗 Representative block diagram (System Architecture)
 
